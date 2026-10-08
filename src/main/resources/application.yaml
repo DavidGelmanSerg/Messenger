@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: messenger
+  liquibase:
+    enabled: true
+    drop-first: true
+  datasource:
+    url: jdbc:postgresql://localhost/messenger
+    username: postgres
+    password: admin
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+  logging:
+    level:
+      root: WARN
+      org.springframework.boot: DEBUG

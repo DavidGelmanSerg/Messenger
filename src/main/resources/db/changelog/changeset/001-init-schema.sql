@@ -1,0 +1,32 @@
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name CHARACTER VARYING (50) NOT NULL,
+    email CHARACTER VARYING (50) NOT NULL
+);
+
+CREATE TABLE chats (
+    id SERIAL PRIMARY KEY,
+    type CHARACTER VARYING (50) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    name CHARACTER VARYING (100),
+    description CHARACTER VARYING (1000)
+);
+
+CREATE TABLE chat_users (
+    user_id INT REFERENCES users (id) ON DELETE SET NULL,
+    chat_id INT REFERENCES chats (id) ON DELETE CASCADE
+);
+
+CREATE TABLE messages (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP NOT NULL,
+    sender_id INT NOT NULL REFERENCES users (id) ON DELETE NO ACTION,
+    chat_id INT NOT NULL REFERENCES chats (id) ON DELETE CASCADE
+);
+
+CREATE TABLE text_content (
+    id SERIAL PRIMARY KEY,
+    message_id INT NOT NULL REFERENCES messages (id) ON DELETE CASCADE,
+    index INT NOT NULL,
+    content CHARACTER VARYING (10000) NOT NULL
+);
