@@ -13,6 +13,18 @@ public class MessengerExceptionHandler {
     @ExceptionHandler(AlreadyExistsException.class)
     public ResponseEntity<?> alreadyExistsExceptionHandler(AlreadyExistsException e) {
         log.warn(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<?> NotFoundExceptionHandler(NotFoundException e) {
+        log.warn(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ChatCreationException.class)
+    public ResponseEntity<?> ChatCreationExceptionHandler(ChatCreationException e) {
+        log.warn(e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 }

@@ -10,7 +10,7 @@ import ru.gelman.messenger.dto.CreateUserDto;
 import ru.gelman.messenger.dto.UserDto;
 import ru.gelman.messenger.entity.User;
 import ru.gelman.messenger.mapping.UserMapper;
-import ru.gelman.messenger.service.users.UserService;
+import ru.gelman.messenger.service.user.UserService;
 
 @RestController
 @Slf4j

@@ -1,16 +1,16 @@
 package ru.gelman.messenger.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
-import org.apache.commons.lang3.builder.ToStringExclude;
-import ru.gelman.messenger.entity.Chat;
 
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "users")
+@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

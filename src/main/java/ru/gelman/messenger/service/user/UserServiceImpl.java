@@ -1,10 +1,11 @@
-package ru.gelman.messenger.service.users;
+package ru.gelman.messenger.service.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gelman.messenger.entity.User;
 import ru.gelman.messenger.exception.AlreadyExistsException;
+import ru.gelman.messenger.exception.NotFoundException;
 import ru.gelman.messenger.repository.UserRepository;
 
 @Service
@@ -25,5 +26,12 @@ public class UserServiceImpl implements UserService {
         }
         log.debug("Saving {} to data source", user);
         return repository.save(user);
+    }
+
+    @Override
+    public User findById(Long id) {
+        User user = repository.findById(id).orElseThrow(() -> new NotFoundException("User with id %s not found".formatted(id)));
+        log.debug("Found {}", user);
+        return user;
     }
 }

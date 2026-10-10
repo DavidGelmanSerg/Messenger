@@ -21,9 +21,7 @@ public class UserRepositoryTests {
 
     @BeforeAll
     static void prepareUser() {
-        user = new User();
-        user.setEmail("email@emai.com");
-        user.setName("David");
+        user = User.builder().name("David").email("email@emai.com").build();
     }
 
     @Test

@@ -1,6 +1,7 @@
 package ru.gelman.messenger.mapping;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import ru.gelman.messenger.dto.CreateUserDto;
 import ru.gelman.messenger.dto.UserDto;
@@ -13,5 +14,10 @@ public interface UserMapper {
     User convertToEntity(CreateUserDto userDto);
 
     UserDto convertToDto(User user);
+
+    @Named("userToId")
+    default Long userToId(User user) {
+        return user == null ? null : user.getId();
+    }
 
 }

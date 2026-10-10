@@ -8,8 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.gelman.messenger.entity.User;
 import ru.gelman.messenger.exception.AlreadyExistsException;
+import ru.gelman.messenger.exception.NotFoundException;
 import ru.gelman.messenger.repository.UserRepository;
-import ru.gelman.messenger.service.users.UserService;
+import ru.gelman.messenger.service.user.UserService;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class UserServiceTests {
 
     private static User testUser;
+
+    private static User created;
     @Autowired
     private UserService userService;
     @MockitoBean
@@ -25,19 +30,13 @@ public class UserServiceTests {
 
     @BeforeAll
     static void prepareUser() {
-        testUser = new User();
-        testUser.setName("David");
-        testUser.setEmail("testemail@gmail.com");
+        testUser = User.builder().name("David").email("testemail@gmail.com").build();
+        created = User.builder().id(1L).name(testUser.getName()).email(testUser.getEmail()).build();
     }
 
     @Test
     void shouldCreateUserTest() {
-        User created = new User();
-        created.setId(1L);
-        created.setName(testUser.getName());
-        created.setEmail(testUser.getEmail());
         Mockito.when(repository.save(testUser)).thenReturn(created);
-
         User newUser = userService.create(testUser);
 
         assertEquals(newUser.getId(), created.getId());
@@ -48,7 +47,20 @@ public class UserServiceTests {
     @Test
     void shouldThrowAlreadyExistsExceptionTest() {
         Mockito.when(repository.existsByEmail(testUser.getEmail())).thenReturn(true);
-
         assertThrows(AlreadyExistsException.class, () -> userService.create(testUser));
+    }
+
+    @Test
+    void shouldReturnUser() {
+        Mockito.when(repository.findById(created.getId())).thenReturn(Optional.of(created));
+        User user = userService.findById(created.getId());
+
+        assertEquals(user.getId(), created.getId());
+    }
+
+    @Test
+    void shouldThrowNotFoundException() {
+        Mockito.when(repository.findById(created.getId())).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> userService.findById(created.getId()));
     }
 }
