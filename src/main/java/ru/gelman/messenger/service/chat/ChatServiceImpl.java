@@ -11,7 +11,7 @@ import ru.gelman.messenger.entity.User;
 import ru.gelman.messenger.exception.ChatCreationException;
 import ru.gelman.messenger.mapping.ChatMapper;
 import ru.gelman.messenger.repository.ChatRepository;
-import ru.gelman.messenger.service.user.UserService;
+import ru.gelman.messenger.service.user.UserInternalService;
 
 import java.util.List;
 
@@ -20,11 +20,11 @@ import java.util.List;
 public class ChatServiceImpl implements ChatService {
     private final ChatRepository chatRepository;
 
-    private final UserService userService;
+    private final UserInternalService userService;
     private final ChatMapper mapper;
 
     @Autowired
-    public ChatServiceImpl(ChatRepository repository, UserService userService, ChatMapper mapper) {
+    public ChatServiceImpl(ChatRepository repository, UserInternalService userService, ChatMapper mapper) {
         this.chatRepository = repository;
         this.userService = userService;
         this.mapper = mapper;
@@ -32,8 +32,8 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public ChatResponse createPersonalChat(CreatePersonalChatRequest request) {
-        User initiator = userService.findById(request.initiatorUserId());
-        User recipient = userService.findById(request.recipientUserId());
+        User initiator = userService.getUserById(request.initiatorUserId());
+        User recipient = userService.getUserById(request.recipientUserId());
         Chat personalChat = Chat.personal(initiator, recipient);
         log.debug("Saving new {} to datasource", personalChat);
 
@@ -42,7 +42,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public ChatResponse createGroupChat(CreateGroupChatRequest request) {
-        List<User> users = request.userIds().stream().map(userService::findById).toList();
+        List<User> users = request.userIds().stream().map(userService::getUserById).toList();
         if (users.isEmpty()) {
             throw new ChatCreationException("Can not create group chat with empty user list");
         }

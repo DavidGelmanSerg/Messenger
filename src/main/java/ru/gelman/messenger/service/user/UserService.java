@@ -1,8 +1,10 @@
 package ru.gelman.messenger.service.user;
 
-import ru.gelman.messenger.entity.User;
+import ru.gelman.messenger.dto.CreateUserDto;
+import ru.gelman.messenger.dto.UserDto;
 
 public interface UserService {
-    User create(User user);
-    User findById(Long id);
+    UserDto create(CreateUserDto userInfo);
+
+    UserDto findById(long id);
 }

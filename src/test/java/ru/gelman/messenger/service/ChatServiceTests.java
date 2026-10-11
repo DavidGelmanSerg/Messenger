@@ -16,6 +16,7 @@ import ru.gelman.messenger.exception.ChatCreationException;
 import ru.gelman.messenger.mapping.UserMapper;
 import ru.gelman.messenger.repository.ChatRepository;
 import ru.gelman.messenger.service.chat.ChatService;
+import ru.gelman.messenger.service.user.UserInternalService;
 import ru.gelman.messenger.service.user.UserService;
 
 import java.util.Collections;
@@ -32,7 +33,10 @@ public class ChatServiceTests {
     private UserMapper userMapper;
 
     @MockitoBean
-    private UserService userService;
+    private UserInternalService userService;
+
+    @MockitoBean
+    private UserService userInternalService;
 
     @MockitoBean
     private ChatRepository chatRepository;
@@ -59,7 +63,7 @@ public class ChatServiceTests {
     }
 
     private void configureUserServiceFindByIdMethod(List<User> users) {
-        users.forEach(user -> Mockito.when(userService.findById(user.getId())).thenReturn(user));
+        users.forEach(user -> Mockito.when(userService.getUserById(user.getId())).thenReturn(user));
     }
 
     private void configureChatRepositorySaveMethod(Chat creating, Chat created) {
