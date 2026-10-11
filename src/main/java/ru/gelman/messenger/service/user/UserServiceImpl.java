@@ -11,6 +11,8 @@ import ru.gelman.messenger.exception.NotFoundException;
 import ru.gelman.messenger.mapping.UserMapper;
 import ru.gelman.messenger.repository.UserRepository;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService, UserInternalService {
@@ -37,6 +39,11 @@ public class UserServiceImpl implements UserService, UserInternalService {
     @Override
     public UserDto findById(long id) {
         return mapper.convertToDto(getUserById(id));
+    }
+
+    @Override
+    public List<UserDto> findAllById(List<Long> ids) {
+        return mapper.convertToDto(repository.findAllById(ids));
     }
 
     @Override

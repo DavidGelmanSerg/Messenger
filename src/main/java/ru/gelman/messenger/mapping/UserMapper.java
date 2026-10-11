@@ -7,6 +7,8 @@ import ru.gelman.messenger.dto.CreateUserDto;
 import ru.gelman.messenger.dto.UserDto;
 import ru.gelman.messenger.entity.User;
 
+import java.util.List;
+
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Mapper(componentModel = SPRING, unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -14,6 +16,8 @@ public interface UserMapper {
     User convertToEntity(CreateUserDto userDto);
 
     UserDto convertToDto(User user);
+
+    List<UserDto> convertToDto(List<User> users);
 
     @Named("userToId")
     default Long userToId(User user) {

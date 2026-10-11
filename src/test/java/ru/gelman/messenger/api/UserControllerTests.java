@@ -16,6 +16,9 @@ import ru.gelman.messenger.service.user.UserInternalService;
 import ru.gelman.messenger.service.user.UserService;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,5 +58,36 @@ public class UserControllerTests {
                 .andExpect(jsonPath("$.name").value(testUser.getName()))
                 .andExpect(jsonPath("$.email").value(testUser.getEmail()));
 
+    }
+
+    @Test
+    void getUserInfoTest() throws Exception {
+        long id = 1L;
+        UserDto user = new UserDto(id, testUser.getName(), testUser.getEmail());
+        Mockito.when(userService.findById(id)).thenReturn(user);
+
+        mockMvc.perform(get("/users/" + id).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.name").value(testUser.getName()))
+                .andExpect(jsonPath("$.email").value(testUser.getEmail()));
+    }
+
+    @Test
+    void getUserInfoListTest() throws Exception {
+        List<UserDto> users = List.of(
+                new UserDto(1L, testUser.getName(), testUser.getEmail()),
+                new UserDto(2L, testUser.getName(), testUser.getEmail())
+        );
+        List<Long> ids = users.stream().map(UserDto::id).toList();
+        String content = objectMapper.writeValueAsString(ids);
+        Mockito.when(userService.findAllById(ids)).thenReturn(users);
+
+        mockMvc.perform(get("/users/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty());
     }
 }

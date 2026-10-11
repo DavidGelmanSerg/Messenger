@@ -50,4 +50,11 @@ public class ChatServiceImpl implements ChatService {
         log.debug("Saving new {} to datasource", groupChat);
         return mapper.toChatResponse(chatRepository.save(groupChat));
     }
+
+    @Override
+    public List<ChatResponse> findUserChatList(long id) {
+        List<Chat> userChatList = userService.getUserById(id).getChats();
+        log.debug("Found users chats: {}", userChatList);
+        return userChatList.stream().map(mapper::toChatResponse).toList();
+    }
 }
