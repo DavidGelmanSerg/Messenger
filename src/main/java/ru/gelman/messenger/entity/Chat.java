@@ -32,11 +32,12 @@ public class Chat {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_id")
+    @OrderBy("createdAt DESC")
     @ToString.Exclude
     private List<Message> messages;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "chat_users",
             joinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id"),

@@ -5,9 +5,13 @@ import org.mapstruct.ReportingPolicy;
 import ru.gelman.messenger.dto.MessageDto;
 import ru.gelman.messenger.entity.Message;
 
+import java.util.List;
+
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Mapper(componentModel = SPRING, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {UserMapper.class})
 public interface MessageMapper {
     MessageDto toMessageDto(Message message);
+
+    List<MessageDto> toListMessageDto(List<Message> messageList);
 }

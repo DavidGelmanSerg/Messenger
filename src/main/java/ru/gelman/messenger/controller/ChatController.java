@@ -3,9 +3,7 @@ package ru.gelman.messenger.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.gelman.messenger.dto.ChatResponse;
-import ru.gelman.messenger.dto.CreateGroupChatRequest;
-import ru.gelman.messenger.dto.CreatePersonalChatRequest;
+import ru.gelman.messenger.dto.*;
 import ru.gelman.messenger.service.chat.ChatService;
 
 import java.util.List;
@@ -43,5 +41,13 @@ public class ChatController {
         List<ChatResponse> userChatList = chatService.findUserChatList(id);
         log.info("Found user chats: {}", userChatList);
         return userChatList;
+    }
+
+    @PostMapping("/{id}/messages")
+    public MessageDto sendMessage(@PathVariable long id, @RequestBody SimpleTextMessageRequest request) {
+        log.info("Creating message {}", request);
+        MessageDto created = chatService.createMessageInChat(request);
+        log.info("Created {}", created);
+        return created;
     }
 }
